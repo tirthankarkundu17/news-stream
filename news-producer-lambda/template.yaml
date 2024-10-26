@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  News Fetcher and Producer Service
+
+Parameters:
+  Env:
+    Type: String
+    Description: Environment
+    Default: local
+  S3BucketName:
+    Type: String
+    Description: Environment
+    Default: local
+  NewsProducerCron:
+    Type: String
+    Description: Cron Expression for Keyword Scraper
+    Default: 'rate(1 hours)'
+  RedpandaServer:
+    Type: String
+    Description: Cron Expression for Keyword Scraper
+  RedpandaUser:
+    Type: String
+    Description: Cron Expression for Keyword Scraper
+  RedpandaPassword:
+    Type: String
+    Description: Cron Expression for Keyword Scraper
+
+Globals:
+  Function:
+    Timeout: 800
+    MemorySize: 128
+    LoggingConfig:
+      LogFormat: JSON
+    Environment:
+      Variables:
+        REDPANDA_SERVER: !Ref RedpandaServer
+        REDPANDA_USER: !Ref RedpandaUser
+        REDPANDA_PWD: !Ref RedpandaPassword
+
+Resources:
+  NewsProducer:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-NewsProducer'
+      CodeUri: news_producer/
+      Handler: app.handler
+      Runtime: python3.12
+      Architectures:
+        - arm64
+      Events:
+        ScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule: !Ref NewsProducerCron
+            Enabled: true

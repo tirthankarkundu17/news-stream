@@ -1,0 +1,39 @@
+input:
+  label: "Input"
+  kafka_franz:
+    seed_brokers: 
+      - ${REDPANDA_SERVER}
+    topics: 
+      - ${INPUT_TOPIC}
+    consumer_group: "news-consumer" 
+    sasl:
+      - mechanism: SCRAM-SHA-256
+        password: ${REDPANDA_PWD}
+        username: service-user
+    tls:
+      enabled: true
+pipeline:
+  processors:
+    - log:
+        level: INFO
+        message: "Received request: ${! this.description}"
+    - branch:
+        processors:
+          - cohere_chat:
+              api_key: ${COHERE_API_KEY}
+              model: command-r-plus
+              prompt: |
+                Visit this google news rss url ${! this.url} and summarize it
+        result_map: |
+          root.summary = content().string()
+output:
+  kafka_franz:
+    seed_brokers: 
+      - ${REDPANDA_SERVER}
+    topic: ${OUTPUT_TOPIC}
+    sasl:
+      - mechanism: SCRAM-SHA-256
+        password: ${REDPANDA_PWD}
+        username: service-user
+    tls:
+      enabled: true
