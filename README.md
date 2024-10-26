@@ -19,7 +19,7 @@ We built NewsStream using a combination of modern technologies and services:
 
 ## Architecture Diagram
 
-<imr src="./docs/architecture.png">
+<img src="./docs/architecture.png">
 
 ## Challenges we ran into
 Some key challenges we faced included:
