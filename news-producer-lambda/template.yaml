@@ -18,13 +18,13 @@ Parameters:
     Default: 'rate(1 hours)'
   RedpandaServer:
     Type: String
-    Description: Cron Expression for Keyword Scraper
+    Description: Redpanda Server URL
   RedpandaUser:
     Type: String
-    Description: Cron Expression for Keyword Scraper
+    Description: Redpanda Username
   RedpandaPassword:
     Type: String
-    Description: Cron Expression for Keyword Scraper
+    Description: Redpanda Password
 
 Globals:
   Function:
