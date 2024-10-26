@@ -1,0 +1,25 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "news-producer"
+s3_bucket = "news-producer-deployments"
+s3_prefix = "news-producer"
+region = "us-east-2"
+fail_on_empty_changeset = false
+confirm_changeset = false
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = [
+    "NewsProducerCron='rate(1 hours)'",
+    "RedpandaServer=insert_redpanda_server_url",
+    "RedpandaUser=insert_redpanda_server_user",
+    "RedpandaPassword=insert_redpanda_server_password"
+]
+
+[default.build.parameters]
+cached = true
+parallel = true
+
+[test.build.parameters]
+cached = true
+parallel = true
